@@ -77,7 +77,7 @@ func TextEmbed(title, name, text, url,
 	footer string, color int) *discordgo.MessageEmbed {
 
 	if url == "" {
-		url = image
+		url = ""
 	}
 
 	embed := &discordgo.MessageEmbed{
