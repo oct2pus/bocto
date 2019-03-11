@@ -122,9 +122,9 @@ func sliceStrings(m string) []string {
 	return strings.Split(m, " ")
 }
 
-func isMentioned(users [](*discordgo.User), self *discordgo.User) bool {
+func isMentioned(users [](*discordgo.User), self string) bool {
 	for _, ele := range users {
-		if ele.String() == self.String() {
+		if ele.String() == self {
 			return true
 		}
 	}
