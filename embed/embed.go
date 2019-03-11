@@ -39,8 +39,6 @@ func CreditsEmbed(botName, artist, artist2, artist3 string, url string,
 					" ( https://mutant.tech )\n**Mutant Standard Emoji** are " +
 					" licensed under CC-BY-NC-SA 4.0\n" +
 					"( https://creativecommons.org/licenses/by-nc-sa/4.0/ )",
-				"https://github.com/oct2pus/jadebot/blob/origin/art/" +
-					"jadebot.png",
 				Inline: false,
 			},
 		},
