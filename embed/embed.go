@@ -72,6 +72,31 @@ func ImageEmbed(title string, url string, image string,
 	return embed
 }
 
+// TextEmbed returns an embeded Text.
+func TextEmbed(title, name, text, url,
+	footer string, color int) *discordgo.MessageEmbed {
+
+	if url == "" {
+		url = image
+	}
+
+	embed := &discordgo.MessageEmbed{
+		Title: title,
+		Color: color,
+		URL:   url,
+		Fields: []*discordgo.MessageEmbedField{
+			&discordgo.MessageEmbedField{
+				Name:  name,
+				Value: text,
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: footer,
+		},
+	}
+	return embed
+}
+
 // SendMessage sends a message to a discord channel.
 func SendMessage(s *discordgo.Session,
 	channelID, message string) {
