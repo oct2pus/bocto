@@ -12,7 +12,7 @@ import (
 // Bot is a representation of our bot.
 type Bot struct {
 	Name       string
-	Self       *discordgo.User
+	Self       string
 	GuildCount int
 	Prefix     string
 	Session    *discordgo.Session
@@ -108,7 +108,7 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 func (b *Bot) ReadyEvent(session *discordgo.Session,
 	rdy *discordgo.Ready) {
 
-	b.Self = rdy.User
+	b.Self = rdy.User.String()
 	b.GuildCount = len(rdy.Guilds)
 	fmt.Printf("Ready event recieved. %v online.\nGuilds: %v\n",
 		b.Self.String(),
