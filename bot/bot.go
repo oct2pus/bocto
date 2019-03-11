@@ -88,7 +88,7 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 
 	// check if mentioned
 	if isMentioned(message.Message.Mentions, b.Self) {
-		go session.ChannelMessageSend(message.ChannelID,
+		go b.Session.ChannelMessageSend(message.ChannelID,
 			"hello! :D\nby the way my prefix is '`jade: `'"+
 				". just incase you wanted to know! :p")
 	}
