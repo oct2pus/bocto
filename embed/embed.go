@@ -4,8 +4,8 @@ import "github.com/bwmarrin/discordgo"
 
 // CreditsEmbed is used for accreditation of all people involved in making
 // one of my bots.
-func CreditsEmbed(botName string, artist string, artist2 string,
-	artist3 string, color int) *discordgo.MessageEmbed {
+func CreditsEmbed(botName, artist, artist2, artist3 string, url string,
+	color int) *discordgo.MessageEmbed {
 
 	thanks := "Avatar by " + artist + "\n"
 
@@ -39,13 +39,13 @@ func CreditsEmbed(botName string, artist string, artist2 string,
 					" ( https://mutant.tech )\n**Mutant Standard Emoji** are " +
 					" licensed under CC-BY-NC-SA 4.0\n" +
 					"( https://creativecommons.org/licenses/by-nc-sa/4.0/ )",
+				"https://github.com/oct2pus/jadebot/blob/origin/art/" +
+					"jadebot.png",
 				Inline: false,
 			},
 		},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
-			URL: "https://cdn.discordapp.com/" +
-				"avatars/497943811700424704/" +
-				"0a71258d950394d7adb4a369ae9f3722.png?size=1024",
+			URL: url,
 		},
 	}
 
