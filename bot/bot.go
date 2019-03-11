@@ -12,7 +12,7 @@ import (
 // Bot is a representation of our bot.
 type Bot struct {
 	Name      string
-	Self      string
+	Self      *discordgo.User
 	Prefix    string
 	Session   *discordgo.Session
 	Mentioned string
@@ -39,8 +39,8 @@ func (b *Bot) New(name, prefix, token, men, conf string, color int) error {
 	if err != nil {
 		return err
 	}
-	b.Self = b.Session.User("@me")
-	return nil
+	b.Self, err = b.Session.User("@me")
+	return err
 }
 
 func (b Bot) String() string {
