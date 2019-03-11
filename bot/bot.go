@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/oct2pus/bot/embed"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -14,6 +16,8 @@ type Bot struct {
 	GuildCount int
 	Prefix     string
 	Session    *discordgo.Session
+	Mentioned  string
+	Confused   string
 	Color      int
 	commands   map[string]func(
 		Bot,
@@ -23,11 +27,13 @@ type Bot struct {
 }
 
 // New initializes a new Bot.
-func (b *Bot) New(name, prefix, token string, color int) error {
+func (b *Bot) New(name, prefix, token, men, conf string, color int) error {
 	var err error
 	b.Name = name
 	b.Prefix = prefix
 	b.Color = color
+	b.Mentioned = men
+	b.Confused = conf
 	b.commands = make(map[string]func(Bot, *discordgo.MessageCreate, []string))
 	b.phrases = make(map[string]string)
 	b.Session, err = discordgo.New("Bot " + token)
@@ -67,12 +73,17 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	input := sliceStrings(message.Message.Content)
 	// split messages into chunks
 	go func() {
+		confused := true
 		if input[0] == b.Prefix && len(input) >= 2 {
 			for key := range b.commands {
 				if key == input[1] {
 					go b.commands[key](b, message, input[2:])
+					confused = false
 					break
 				}
+			}
+			if confused {
+				go embed.SendMessage(b.Session, message.ChannelID, b.Confused)
 			}
 		}
 	}()
@@ -87,11 +98,10 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	}()
 
 	// check if mentioned
-	/*	if isMentioned(message.Message.Mentions, b.Self) {
+	if isMentioned(message.Message.Mentions, b.Self) {
 		go b.Session.ChannelMessageSend(message.ChannelID,
-			"hello! :D\nby the way my prefix is '`jade: `'"+
-				". just incase you wanted to know! :p")
-	} */
+			b.Mentioned)
+	}
 }
 
 // ReadyEvent occurs when the bot recieves a ready event.
