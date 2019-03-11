@@ -87,11 +87,11 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	}()
 
 	// check if mentioned
-	if isMentioned(message.Message.Mentions, b.Self) {
+	/*	if isMentioned(message.Message.Mentions, b.Self) {
 		go b.Session.ChannelMessageSend(message.ChannelID,
 			"hello! :D\nby the way my prefix is '`jade: `'"+
 				". just incase you wanted to know! :p")
-	}
+	} */
 }
 
 // ReadyEvent occurs when the bot recieves a ready event.
