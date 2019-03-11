@@ -11,15 +11,14 @@ import (
 
 // Bot is a representation of our bot.
 type Bot struct {
-	Name       string
-	Self       string
-	GuildCount int
-	Prefix     string
-	Session    *discordgo.Session
-	Mentioned  string
-	Confused   string
-	Color      int
-	commands   map[string]func(
+	Name      string
+	Self      string
+	Prefix    string
+	Session   *discordgo.Session
+	Mentioned string
+	Confused  string
+	Color     int
+	commands  map[string]func(
 		Bot,
 		*discordgo.MessageCreate,
 		[]string)
@@ -37,7 +36,11 @@ func (b *Bot) New(name, prefix, token, men, conf string, color int) error {
 	b.commands = make(map[string]func(Bot, *discordgo.MessageCreate, []string))
 	b.phrases = make(map[string]string)
 	b.Session, err = discordgo.New("Bot " + token)
-	return err
+	if err != nil {
+		return err
+	}
+	b.Self = b.Session.User("@me")
+	return nil
 }
 
 func (b Bot) String() string {
@@ -108,11 +111,11 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 func (b *Bot) ReadyEvent(session *discordgo.Session,
 	rdy *discordgo.Ready) {
 
-	b.Self = rdy.User.String()
-	b.GuildCount = len(rdy.Guilds)
+	b.Session.UpdateStatus(0, "prefix: '"+b.Prefix+"'")
+
 	fmt.Printf("Ready event recieved. %v online.\nGuilds: %v\n",
 		b.Self,
-		b.GuildCount)
+		len(rdy.Guilds))
 
 }
 
