@@ -124,7 +124,7 @@ func sliceStrings(m string) []string {
 
 func isMentioned(users []*discordgo.User, self *discordgo.User) bool {
 	for _, ele := range users {
-		if ele.Username == self.Username {
+		if ele.String() == self.String() {
 			return true
 		}
 	}
