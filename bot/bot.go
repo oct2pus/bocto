@@ -111,7 +111,7 @@ func (b *Bot) ReadyEvent(session *discordgo.Session,
 	b.Self = rdy.User
 	b.GuildCount = len(rdy.Guilds)
 	fmt.Printf("Ready event recieved. %v online.\nGuilds: %v\n",
-		b.Name,
+		b.Self.String(),
 		b.GuildCount)
 
 }
