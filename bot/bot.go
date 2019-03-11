@@ -111,7 +111,7 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 func (b *Bot) ReadyEvent(session *discordgo.Session,
 	rdy *discordgo.Ready) {
 
-	b.Session.UpdateStatus(0, "prefix: '"+b.Prefix+"'")
+	b.Session.UpdateStatus(0, "prefix: \""+b.Prefix+" \"")
 
 	fmt.Printf("Ready event recieved. %v online.\nGuilds: %v\n",
 		b.Self,
