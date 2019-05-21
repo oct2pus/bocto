@@ -1,4 +1,4 @@
-package embed
+package bocto
 
 import "github.com/bwmarrin/discordgo"
 
@@ -95,18 +95,4 @@ func TextEmbed(title, name, text, url,
 		},
 	}
 	return embed
-}
-
-// SendMessage sends a message to a discord channel.
-func SendMessage(s *discordgo.Session,
-	channelID, message string) {
-	s.ChannelMessageSend(channelID, message)
-}
-
-// SendEmbededMessage sends an embed message to a discord channel.
-func SendEmbededMessage(s *discordgo.Session,
-	channelID string,
-	embed *discordgo.MessageEmbed) {
-
-	s.ChannelMessageSendEmbed(channelID, embed)
 }
