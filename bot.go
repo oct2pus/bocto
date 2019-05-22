@@ -110,10 +110,10 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	}
 
 	// command check
-	if beginsWith(input[0], b.Prefix) {
+	if strings.HasPrefix(input[0], b.Prefix) {
 		confused := true
 		for key := range b.commands {
-			if key == input[1] {
+			if b.Prefix+key == input[0] {
 				go b.commands[key](b, message, input[1:])
 				confused = false
 				break
@@ -150,13 +150,6 @@ func (b *Bot) ReadyEvent(session *discordgo.Session,
 		b.Self,
 		len(rdy.Guilds))
 
-}
-
-func beginsWith(s string, substr string) bool {
-	if strings.Index(s, substr) == 0 {
-		return true
-	}
-	return false
 }
 
 func isMentioned(users [](*discordgo.User), self *discordgo.User) bool {
