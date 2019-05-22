@@ -114,7 +114,7 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 		confused := true
 		for key := range b.commands {
 			if key == input[1] {
-				go b.commands[key](b, message, input[2:])
+				go b.commands[key](b, message, input[1:])
 				confused = false
 				break
 			}
