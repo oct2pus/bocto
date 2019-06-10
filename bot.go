@@ -100,12 +100,11 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	// around June 15th, 2019.
 	if input[0] == "jade:" && len(input) >= 2 {
 		session.ChannelMessageSend(id,
-			"you should try **"+b.Prefix+"** instead! :B")
+			"you should try **"+b.Prefix+input[1]+"** instead! :B")
 		return
-	}
-	if input[0] == "vriska:" && len(input) >= 2 {
+	} else if input[0] == "vriska:" && len(input) >= 2 {
 		session.ChannelMessageSend(id,
-			"Hey num8skull I only respond to **"+b.Prefix+"** now!")
+			"Hey num8skull try **"+b.Prefix+input[1]+"** instead!")
 		return
 	}
 
