@@ -95,19 +95,6 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 	input := sliceStrings(message.Message.Content)
 	id := message.ChannelID
 
-	// old prefix behavior check
-	// i'm going to hard code this, future!me please remove this
-	// around June 15th, 2019.
-	if input[0] == "jade:" && len(input) >= 2 {
-		session.ChannelMessageSend(id,
-			"you should try **"+b.Prefix+input[1]+"** instead! :B")
-		return
-	} else if input[0] == "vriska:" && len(input) >= 2 {
-		session.ChannelMessageSend(id,
-			"Hey num8skull try **"+b.Prefix+input[1]+"** instead!")
-		return
-	}
-
 	// command check
 	if strings.HasPrefix(input[0], b.Prefix) {
 		confused := true
