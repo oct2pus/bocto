@@ -21,7 +21,7 @@ type Bot struct {
 		Bot,
 		*discordgo.MessageCreate,
 		[]string)
-	phrases map[string]string
+	phrases map[string]([]string)
 }
 
 // New initializes a new Bot.
@@ -47,7 +47,7 @@ func (b *Bot) New(name, prefix, token, men, confused string, color int) error {
 	b.Mentioned = men
 	b.Confused = confused
 	b.commands = make(map[string]func(Bot, *discordgo.MessageCreate, []string))
-	b.phrases = make(map[string]string)
+	b.phrases = make(map[string]([]string))
 	b.Session, err = discordgo.New("Bot " + token)
 	if err != nil {
 		return err
@@ -67,8 +67,8 @@ func (b Bot) String() string {
 
 // AddPhrase adds a quirky phrase for our bot to respond to.
 // these are implicit
-func (b *Bot) AddPhrase(key, value string) {
-	b.phrases[key] = value
+func (b *Bot) AddPhrase(key, values ...string) {
+	b.phrases[key] = values
 }
 
 // AddCommand adds a Command to a Bot.
@@ -113,9 +113,11 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 
 	// phrase check
 	go func() {
-		for key, value := range b.phrases {
+		for key, values := range b.phrases {
 			if strings.Contains(message.Content, key) && b.notDisabled(message.GuildID) {
-				session.ChannelMessageSend(id, value)
+				for _, value := range values {
+					session.ChannelMessageSend(id, value)
+				}
 			}
 		}
 	}()
