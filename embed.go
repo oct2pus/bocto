@@ -1,52 +1,51 @@
 package bocto
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+
+	"github.com/bwmarrin/discordgo"
+)
+
+// Contributor represents metadata about an Contributor, used for accreditation.
+type Contributor struct {
+	Name    string
+	Message string
+	URL     string
+	Type 	string
+}
 
 // CreditsEmbed is used for accreditation of all people involved in making
-// one of my bots.
-func CreditsEmbed(botName, artist, artist2, artist3 string, url string,
-	color int) *discordgo.MessageEmbed {
-
-	thanks := "Avatar by " + artist + "\n"
-
-	// this is such a hack
-	if artist2 != "" {
-		thanks += "Original Design by " + artist2 + "\n"
-	}
-
-	thanks += "Emojis by " + artist3
+// the bot possible. or at least, most of them.
+func CreditsEmbed(botName, url string,
+	color int, usesMutantStandard bool, artists ...Contributor) *discordgo.MessageEmbed {
 
 	embed := &discordgo.MessageEmbed{
 		Color: color,
 		Type:  "About",
-		Fields: []*discordgo.MessageEmbedField{
-			&discordgo.MessageEmbedField{
-				Name: botName,
-				Value: "Created by \\🐙\\🐙#0413" +
-					" ( http://oct2pus.tumblr.com/ )\n" +
-					botName + " uses the 'discordgo' library\n" +
-					"( https://github.com/bwmarrin/discordgo/ )",
-				Inline: false,
-			},
-			&discordgo.MessageEmbedField{
-				Name:   "Special Thanks",
-				Value:  thanks,
-				Inline: false,
-			},
-			&discordgo.MessageEmbedField{
-				Name: "Disclaimer",
-				Value: botName + " uses **Mutant Standard Emoji**" +
-					" ( https://mutant.tech )\n**Mutant Standard Emoji** are " +
-					" licensed under CC-BY-NC-SA 4.0\n" +
-					"( https://creativecommons.org/licenses/by-nc-sa/4.0/ )",
-				Inline: false,
-			},
-		},
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: url,
 		},
 	}
-
+	if len(artists) > 0 {
+		for _, artist := range artists {
+			embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+				Name:   artist.Type,
+				Value:  fmt.Sprintf(artist.Message, artist.Name, artist.URL),
+				Inline: false,
+			})
+		}
+	}
+	// this is such a hack
+	if usesMutantStandard {
+		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+			Name: "Disclaimer",
+			Value: botName + " uses **Mutant Standard Emoji**" +
+				" ( https://mutant.tech )\n**Mutant Standard Emoji** are " +
+				" licensed under CC-BY-NC-SA 4.0\n" +
+				"( https://creativecommons.org/licenses/by-nc-sa/4.0/ )",
+			Inline: false,
+		})
+	}
 	return embed
 }
 
