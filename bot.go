@@ -67,7 +67,7 @@ func (b Bot) String() string {
 
 // AddPhrase adds a quirky phrase for our bot to respond to.
 // these are implicit
-func (b *Bot) AddPhrase(key, values ...string) {
+func (b *Bot) AddPhrase(key string, values []string) {
 	b.phrases[key] = values
 }
 
