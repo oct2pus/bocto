@@ -10,11 +10,11 @@ import (
 // Bot is a representation of a discord chatbot.
 type Bot struct {
 	Color          int
-	Confused       string
-	DisablePhrases bool
-	Mentioned      string
 	Name           string
 	Prefix         string
+	Mentioned      func(Bot, *discordgo.MessageCreate, []string)
+	Confused       func(Bot, *discordgo.MessageCreate, []string)
+	DisablePhrases func(guildID string) bool
 	Self           *discordgo.User
 	Session        *discordgo.Session
 	commands       map[string]func(
@@ -33,28 +33,22 @@ type Bot struct {
 //
 // - Token is your bot token.
 //
-// - Mentioned is what your bot says when Mentioned. Use this to inform people
-// of your bots command prefix.
-//
-// - Confused is what your bot says when it recieves an invalid command.
-//
 // - Color designates what color an embed should have by default.
-func (b *Bot) New(name, prefix, token, men, confused string, color int) error {
+func (b *Bot) New(name, prefix, token string, color int) error {
 	var err error
 	b.Name = name
 	b.Prefix = prefix
 	b.Color = color
-	b.Mentioned = men
-	b.Confused = confused
 	b.commands = make(map[string]func(Bot, *discordgo.MessageCreate, []string))
 	b.phrases = make(map[string]([]string))
 	b.Session, err = discordgo.New("Bot " + token)
 	if err != nil {
 		return err
 	}
-	// phrases must be manually disabled
-	b.DisablePhrases = false
 	b.Self, err = b.Session.User("@me")
+	b.Mentioned = mentioned
+	b.Confused = confused
+	b.DisablePhrases = disablePhrases
 	return err
 }
 
@@ -106,25 +100,24 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 			}
 		}
 		if confused {
-			session.ChannelMessageSend(id, b.Confused)
+			b.Confused(b, message, input)
 		}
 		return
 	}
 
 	// phrase check
-	go func() {
-		for key, values := range b.phrases {
-			if strings.Contains(message.Content, key) && b.notDisabled(message.GuildID) {
-				for _, value := range values {
-					session.ChannelMessageSend(id, value)
-				}
+	for key, values := range b.phrases {
+		if strings.Contains(message.Content, key) && b.DisablePhrases(message.GuildID) {
+			for _, value := range values {
+				session.ChannelMessageSend(id, value)
 			}
+			return
 		}
-	}()
+	}
 
 	// mention check
 	if isMentioned(message.Message.Mentions, b.Self) {
-		session.ChannelMessageSend(id, b.Mentioned)
+		b.Mentioned(b, message, input)
 	}
 }
 
@@ -149,18 +142,16 @@ func isMentioned(users [](*discordgo.User), self *discordgo.User) bool {
 	return false
 }
 
-// notDisabled checks is a phrases are not disabled
-func (b *Bot) notDisabled(guild string) bool {
-	// dummy proofing
-	if !b.DisablePhrases || len(b.phrases) > 0 {
-		return true
-	}
-
-	return false
-}
-
 func sliceStrings(s string) []string {
 
 	s = strings.ToLower(s)
 	return strings.Split(s, " ")
 }
+
+func disablePhrases(guildID string) bool {
+	return false
+}
+
+func mentioned(bot Bot, message *discordgo.MessageCreate, input []string) {}
+
+func confused(bot Bot, message *discordgo.MessageCreate, input []string) {}
