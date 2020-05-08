@@ -35,7 +35,9 @@ func (b *Bot) New(name, prefix, token string, color int) error {
 	b.Prefix = prefix
 	b.Color = color
 	b.commands = make(map[string]command)
+	println("Bot " + token)
 	b.Session, err = discordgo.New("Bot " + token)
+
 	if err != nil {
 		return err
 	}
