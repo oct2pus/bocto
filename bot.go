@@ -114,7 +114,8 @@ func (b Bot) MessageCreate(session *discordgo.Session,
 func (b *Bot) ReadyEvent(session *discordgo.Session,
 	rdy *discordgo.Ready) {
 
-	b.Session.UpdateStatus(0, "Prefix: \""+b.Prefix+"\"")
+	// TODO: This no longer seems to exist as in discordgo v0.23.2
+	//	b.Session.UpdateStatus(0, "Prefix: \""+b.Prefix+"\"")
 
 	fmt.Printf("Ready event recieved. %v online.\nGuilds: %v\n",
 		b.Self,
